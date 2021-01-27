@@ -18,21 +18,14 @@ public class Server {
         this.serverSocket = new ServerSocket(port);
     }
 
-    public void startServer() {
-        for (int i = 0; i < 5; i++) {
+    public void startServer() throws IOException {
+        while (true) {
+            Socket socket = serverSocket.accept();
             executorService.submit(new Thread(() -> {
-                try (Socket socket = serverSocket.accept();) {
-                    readReaquest(socket);
-                    Thread.sleep(10000);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                readReaquest(socket);
             }));
         }
     }
-
 
     private void readReaquest(Socket socket) {
         try (
@@ -66,7 +59,6 @@ public class Server {
                     Files.copy(filePath, out);
                     out.flush();
                 }
-
             }
 
         } catch (IOException e) {
@@ -74,7 +66,6 @@ public class Server {
         }
 
     }
-
 
 }
 
